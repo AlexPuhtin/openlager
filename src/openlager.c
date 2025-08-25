@@ -436,6 +436,7 @@ static void do_usart_logging(void) {
 
 	open_log(&log_file);
 
+	unsigned int count = 0;
 	while (1) {
 		const char *pos;
 		unsigned int amt;
@@ -459,6 +460,23 @@ static void do_usart_logging(void) {
 			// buffers.
 			res = f_sync(&log_file);
 
+			if (count > 10)
+			{
+				f_close(&log_file);
+				open_log(&log_file);
+				count = 0;
+
+				// for(int i=0; i<10; i++) {
+				// 	// Blink the LED 10 times to indicate a flush
+				// 	led_toggle();
+				// 	for(volatile int u = 1000000; u > 0; u--);	// 100ms
+				// }
+			}
+			else if (count > 0)
+			{
+			count++;
+			}
+
 			if (res != FR_OK) {
 				// . .-. .-.
 				led_panic("SERR");
@@ -467,6 +485,10 @@ static void do_usart_logging(void) {
 			UINT written;
 
 			res = f_write(&log_file, pos, amt, &written);
+
+			if (res == FR_OK) {
+				count = 1;
+			}
 
 			if (res != FR_OK) {
 				// . .-. .-.
