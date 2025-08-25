@@ -47,8 +47,8 @@ ifeq ("$(STACK_USAGE)","")
     CCACHE_BIN := $(shell which ccache 2>/dev/null)
 endif
 
-CC := $(CCACHE_BIN) $(ARM_SDK_PREFIX)gcc
-
+# CC := $(CCACHE_BIN) $(ARM_SDK_PREFIX)gcc
+CC := $(ARM_SDK_PREFIX)gcc
 CPPFLAGS += $(patsubst %,-I%,$(INC))
 CPPFLAGS += -DSTM32F411xE -DUSE_STDPERIPH_DRIVER
 
